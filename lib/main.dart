@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './face_expression_reader.dart';
 
 void main() => runApp(MyApp());
 
@@ -63,6 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _initCamera() {
+    FaceExpressionReader().init();
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -105,6 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
+              'This is a Flutter App',
+              style: Theme.of(context).textTheme.title,
+              textAlign: TextAlign.center,
+            ),
+            Text(
               'Press plus button to increase and minus button to decrease',
               style: Theme.of(context).textTheme.body2,
               textAlign: TextAlign.center,
@@ -131,11 +141,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: _initCamera,
+        tooltip: 'Camera',
+        child: Icon(Icons.camera_alt),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
