@@ -8,7 +8,7 @@ List<CameraDescription> cameras;
 
 class FaceReader extends ValueNotifier<Face> {
   FaceReader() : super(null) {
-    // init();
+    init();
   }
 
   CameraLensDirection dir = CameraLensDirection.back;

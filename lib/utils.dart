@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 bool isDetecting = false;
 
@@ -20,4 +22,18 @@ IconData getCameraLensIcon(CameraLensDirection direction) {
       return Icons.camera;
   }
   throw ArgumentError('Unknown lens direction');
+}
+
+Future<FirebaseApp> getFirebaseApp() async {
+  final FirebaseApp app = await FirebaseApp.configure(
+    name: 'project-63604793957',
+    options: const FirebaseOptions(
+      googleAppID: '1:63604793957:ios:0f388d195373c0b9',
+      apiKey: 'AIzaSyBvTuLK6V_jzbX8jd-sJDGPeG4CZNPOpb4',
+      projectID: 'flutter-learning-1fd5c',
+      gcmSenderID: '63604793957',
+    ),
+  );
+
+  return app;
 }

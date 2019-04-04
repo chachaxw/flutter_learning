@@ -1,7 +1,9 @@
+import 'package:http/http.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'camera.dart';
 
-void main() => runApp(MyApp());
+main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -10,16 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Learning',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.cyan,
+        primarySwatch: Colors.indigo,
       ),
       home: MyHomePage(title: 'Flutter Learning'),
     );
@@ -29,15 +22,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -45,27 +29,57 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  void _decreamentCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
 
   void _initCamera() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => CameraExample()));
+  }
+
+  Widget _buildNews(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('user').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+
+        if (!snapshot.hasData) return LinearProgressIndicator();
+
+        return _buildNewsList(context, snapshot.data.documents);
+      },
+    );
+  }
+
+  Widget _buildNewsList(BuildContext context, List<DocumentSnapshot> data) {
+    return new ListView(
+      padding: const EdgeInsets.only(top: 16.0),
+      children: data.map((DocumentSnapshot document) {
+        return new ListTile(
+          title: new Text(document['username']),
+          subtitle: new Text(document['phone']),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildStack(BuildContext context, DocumentSnapshot document) {
+    return Stack(
+      children: <Widget>[
+        CircleAvatar(
+          backgroundImage: AssetImage(document['avatar']),
+          radius: 56,
+        ),
+        Text(
+          document['username'],
+          style: Theme.of(context).textTheme.title,
+        ),
+        Text(
+          document['phone'],
+          style: Theme.of(context).textTheme.subtitle,
+        ),
+        Text(
+          document['email'],
+          style: Theme.of(context).textTheme.subtitle,
+        ),
+      ],
+    );
   }
 
   @override
@@ -83,64 +97,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.search, color: Colors.white),
             tooltip: 'Search',
             onPressed: null,
           ),
         ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'This is a Flutter App',
-              style: Theme.of(context).textTheme.title,
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Press plus button to increase and minus button to decrease',
-              style: Theme.of(context).textTheme.body2,
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display4,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.remove),
-                  tooltip: 'Decreament',
-                  onPressed: _decreamentCounter,
-                ),
-                IconButton(
-                  icon: Icon(Icons.add),
-                  tooltip: 'Increment',
-                  onPressed: _incrementCounter,
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
+      body: _buildNews(context),
       floatingActionButton: FloatingActionButton(
         onPressed: _initCamera,
         tooltip: 'Camera',
