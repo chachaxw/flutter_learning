@@ -1,12 +1,13 @@
-import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'services/api_service.dart';
 import 'camera.dart';
+import 'dart:convert';
 
 main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,32 +31,98 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  List newsData;
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    this.getNewsData();
+  }
+
+  Future<void> getNewsData() async {
+    setState(() => loading = true);
+
+    var response = await ApiService().getNewsData();
+
+    // To modify the state of the app, use this method
+    setState(() {
+      // Get the JSON data
+      var dataConvertedToJSON = json.decode(response.body);
+      // Extract the required part and assign it to the global variable named data
+      newsData = dataConvertedToJSON['articles'];
+      loading = false;
+    });
+  }
+
   void _initCamera() {
     Navigator.push(context, MaterialPageRoute(builder: (context) => CameraExample()));
   }
 
-  Widget _buildNews(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('user').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-
-        if (!snapshot.hasData) return LinearProgressIndicator();
-
-        return _buildNewsList(context, snapshot.data.documents);
-      },
+  Widget _buildLoading() {
+    return new Container(
+      alignment: Alignment.center,
+      child: CircularProgressIndicator(),
     );
   }
 
-  Widget _buildNewsList(BuildContext context, List<DocumentSnapshot> data) {
-    return new ListView(
+  Widget _buildNewsList(BuildContext context, List<dynamic> data) {
+    return new ListView.builder(
       padding: const EdgeInsets.only(top: 16.0),
-      children: data.map((DocumentSnapshot document) {
-        return new ListTile(
-          title: new Text(document['username']),
-          subtitle: new Text(document['phone']),
+      itemCount: newsData == null ? 0 : newsData.length,
+      itemBuilder: (BuildContext context, int index) {
+        var id = data[index]['id'];
+        var url = data[index]['urlToImage'];
+        var title = data[index]['title'];
+        var description = data[index]['description'];
+
+        return Card(
+          key: id,
+          margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 16.0),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              // Stretch the cards in horizontal axis
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: 80,
+                  height: 80,
+                  margin: const EdgeInsets.only(right: 10.0),
+                  child: url != null ? Image.network(
+                    url,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center
+                  ) : Icon(
+                    Icons.image,
+                    color: Colors.grey,
+                    size: 50.0,
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(
+                      title,
+                      maxLines: 1,
+                      textAlign: TextAlign.left,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    Text(
+                      description,
+                      softWrap: true,
+                      maxLines: 3,
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ),
         );
-      }).toList(),
+      },
     );
   }
 
@@ -82,14 +149,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -103,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: _buildNews(context),
+      body: loading ? _buildLoading() : _buildNewsList(context, newsData),
       floatingActionButton: FloatingActionButton(
         onPressed: _initCamera,
         tooltip: 'Camera',
