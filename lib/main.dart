@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './face_expression_reader.dart';
+import 'camera.dart';
 
 void main() => runApp(MyApp());
 
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _initCamera() {
-    FaceExpressionReader().init();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CameraExample()));
   }
 
   @override

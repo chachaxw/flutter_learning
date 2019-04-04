@@ -1,13 +1,14 @@
 import 'utils.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 
 List<CameraDescription> cameras;
 
-class FaceExpressionReader extends ValueNotifier<Face> {
-  FaceExpressionReader() : super(null) {
-    init();
+class FaceReader extends ValueNotifier<Face> {
+  FaceReader() : super(null) {
+    // init();
   }
 
   CameraLensDirection dir = CameraLensDirection.back;
