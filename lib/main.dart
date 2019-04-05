@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services/api_service.dart';
-import 'camera.dart';
 import 'dart:convert';
+import 'dart:async';
+import 'camera.dart';
 
 main() => runApp(MyApp());
 
@@ -33,16 +34,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List newsData;
   bool loading = false;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
     super.initState();
+    setState(() => loading = true);
     this.getNewsData();
   }
 
-  Future<void> getNewsData() async {
-    setState(() => loading = true);
+  Future<void> _handleRefresh() async {
+    await this.getNewsData();
+  }
 
+  Future<void> getNewsData() async {
     var response = await ApiService().getNewsData();
 
     // To modify the state of the app, use this method
@@ -60,66 +65,65 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildLoading() {
+    final Animation<Color> valueColor = new AlwaysStoppedAnimation<Color>(Colors.orange);
+
     return new Container(
       alignment: Alignment.center,
-      child: CircularProgressIndicator(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          CircularProgressIndicator(valueColor: valueColor),
+          Padding(
+            padding: EdgeInsets.all(12),
+            child: Text('News Coming...'),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildNewsList(BuildContext context, List<dynamic> data) {
+    if (loading) {
+      return _buildLoading();
+    }
+
     return new ListView.builder(
-      padding: const EdgeInsets.only(top: 16.0),
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(top: 20.0),
       itemCount: newsData == null ? 0 : newsData.length,
       itemBuilder: (BuildContext context, int index) {
-        var id = data[index]['id'];
-        var url = data[index]['urlToImage'];
-        var title = data[index]['title'];
-        var description = data[index]['description'];
+        var item = data[index];
+        var id = item['id'];
+        var url = item['urlToImage'];
+        var title = item['title'];
+        var description = item['description'];
 
-        return Card(
+        return new Card(
           key: id,
           margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 16.0),
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              // Stretch the cards in horizontal axis
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: 80,
-                  height: 80,
-                  margin: const EdgeInsets.only(right: 10.0),
-                  child: url != null ? Image.network(
-                    url,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center
-                  ) : Icon(
-                    Icons.image,
-                    color: Colors.grey,
-                    size: 50.0,
-                  ),
-                ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      title,
-                      maxLines: 1,
-                      textAlign: TextAlign.left,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.title,
-                    ),
-                    Text(
-                      description,
-                      softWrap: true,
-                      maxLines: 3,
-                      textAlign: TextAlign.justify,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.body1,
-                    ),
-                  ],
-                ),
-              ],
-            )
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(16.0),
+            leading: url != null ? Image.network(
+              url,
+              width: 80,
+              height: 80,
+              fit: BoxFit.cover,
+            ) : Icon(
+              Icons.landscape,
+              color: Colors.grey,
+              size: 80.0,
+            ),
+            title: Text(
+              title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              description,
+              maxLines: 3,
+              textAlign: TextAlign.justify,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         );
       },
@@ -165,7 +169,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: loading ? _buildLoading() : _buildNewsList(context, newsData),
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: _handleRefresh,
+        color: Colors.orange,
+        child: _buildNewsList(context, newsData),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _initCamera,
         tooltip: 'Camera',
