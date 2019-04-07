@@ -37,7 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
   List newsData;
   bool loading = false;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
-  final GlobalKey<ScrollableTabsState> _scrollablTabsKey = GlobalKey<ScrollableTabsState>();
+  final GlobalKey<_MyHomePageState> _myHomePageKey = GlobalKey<_MyHomePageState>();
+
+  // const List<_Page> _allPages = <_Page>[
+  //   _Page(icon: Icons.favorite, text: 'Favorite', body: Text('Favorite')),
+  //   _Page(icon: Icons.explore, text: 'Discover', body: _buildDiscover(context)),
+  //   _Page(icon: Icons.grain, text: 'Hot', body: Text('Hot')),
+  // ];
 
   @override
   void initState() {
@@ -156,37 +162,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // This widget is the root of your application.
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       // Here we take the value from the MyHomePage object that was created by
-  //       // the App.build method, and use it to set our appbar title.
-  //       title: Text(widget.title),
-  //       actions: <Widget>[
-  //         IconButton(
-  //           icon: Icon(Icons.search, color: Colors.white),
-  //           tooltip: 'Search',
-  //           onPressed: null,
-  //         ),
-  //       ],
-  //     ),
-  //     body: RefreshIndicator(
-  //       key: _refreshIndicatorKey,
-  //       onRefresh: _handleRefresh,
-  //       color: Colors.orange,
-  //       child: _buildNewsList(context, newsData),
-  //     ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _initCamera,
-      //   tooltip: 'Camera',
-      //   child: Icon(Icons.camera_alt),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
-  //   );
-  // }
+  Widget _buildDiscover(BuildContext context) {
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _handleRefresh,
+      color: Colors.orange,
+      child: _buildNewsList(context, newsData),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ScrollableTabs(title: 'News');
+    return ScrollableTabs(
+      title: 'News',
+      pages: null,
+    );
   }
 }

@@ -11,13 +11,7 @@ class _Page {
   final IconData icon;
   final String text;
   final Widget body;
-}
-
-const List<_Page> _allPages = <_Page>[
-  _Page(icon: Icons.favorite, text: 'Favorite', body: Text('Favorite')),
-  _Page(icon: Icons.explore, text: 'Discover', body: Text('Discover')),
-  _Page(icon: Icons.grain, text: 'Hot', body: Text('Hot')),
-]; 
+} 
 
 class ScrollableTabs extends StatefulWidget {
   ScrollableTabs({ Key key, this.pages, this.title }) : super(key: key);
@@ -26,18 +20,25 @@ class ScrollableTabs extends StatefulWidget {
   final List<_Page> pages;
 
   @override
-  ScrollableTabsState createState() => ScrollableTabsState();
+  ScrollableTabsState createState() => ScrollableTabsState(pages: pages);
 }
 
 class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProviderStateMixin {
+  ScrollableTabsState({ this.pages });
+
   TabController _controller;
   TabsStyle _tabsStyle = TabsStyle.textOnly;
+
+  final List<_Page> pages;
   bool _customIndicator = false;
 
   @override
   void initState() {
     super.initState();
-    _controller = TabController(vsync: this, length: _allPages.length);
+
+    if (pages != null) {
+      _controller = TabController(vsync: this, length: pages.length);
+    }
   }
 
   @override
@@ -103,14 +104,15 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        bottom: TabBar(
+        bottom: pages != null ? TabBar(
           controller: _controller,
           isScrollable: false,
           indicator: getIndicator(),
-          tabs: _allPages.map<Tab>((_Page page) {
+          tabs: pages.map<Tab>((_Page page) {
             assert(_tabsStyle != null);
             switch (_tabsStyle) {
               case TabsStyle.iconsAndText:
@@ -122,7 +124,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
             }
             return null;
           }).toList(),
-        ),
+        ) : null,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
@@ -131,9 +133,9 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           ),
         ],
       ),
-      body: TabBarView(
+      body: pages != null ? TabBarView(
         controller: _controller,
-        children: _allPages.map<Widget>((_Page page) {
+        children: pages.map<Widget>((_Page page) {
           return SafeArea(
             top: false,
             bottom: false,
@@ -144,6 +146,9 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
             ),
           );
         }).toList(),
+      ) : Container(
+        alignment: Alignment.center,
+        child: Text('No Data'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: null,
