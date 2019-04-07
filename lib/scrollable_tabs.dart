@@ -14,12 +14,16 @@ class _Page {
 }
 
 const List<_Page> _allPages = <_Page>[
-  _Page(icon: Icons.grade, text: 'Favorite'),
-  _Page(icon: Icons.sentiment_very_satisfied, text: 'Discover'),
-  _Page(icon: Icons.grain, text: 'Hot'),
-];
+  _Page(icon: Icons.favorite, text: 'Favorite', body: Text('Favorite')),
+  _Page(icon: Icons.explore, text: 'Discover', body: Text('Discover')),
+  _Page(icon: Icons.grain, text: 'Hot', body: Text('Hot')),
+]; 
 
 class ScrollableTabs extends StatefulWidget {
+  ScrollableTabs({ Key key, this.pages, this.title }) : super(key: key);
+
+  final String title;
+  final List<_Page> pages;
 
   @override
   ScrollableTabsState createState() => ScrollableTabsState();
@@ -27,12 +31,19 @@ class ScrollableTabs extends StatefulWidget {
 
 class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProviderStateMixin {
   TabController _controller;
-  TabsStyle _tabsStyle = TabsStyle.iconsAndText;
+  TabsStyle _tabsStyle = TabsStyle.textOnly;
   bool _customIndicator = false;
 
   @override
   void initState() {
     super.initState();
+    _controller = TabController(vsync: this, length: _allPages.length);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Decoration getIndicator() {
@@ -62,7 +73,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           shape: const CircleBorder(
             side: BorderSide(
               color: Colors.white24,
-              width: 4.0,
+              width: 2.0,
             ),
           ) + const CircleBorder(
             side: BorderSide(
@@ -76,7 +87,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           shape: const StadiumBorder(
             side: BorderSide(
               color: Colors.transparent,
-              width: 4.0,
+              width: 2.0,
             ),
           ) + const StadiumBorder(
             side: BorderSide(
@@ -92,14 +103,12 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
-    final Color iconColor = Theme.of(context).accentColor;
-
     return Scaffold(
       appBar: AppBar(
-        actions: <Widget>[],
+        title: Text(widget.title),
         bottom: TabBar(
           controller: _controller,
-          isScrollable: true,
+          isScrollable: false,
           indicator: getIndicator(),
           tabs: _allPages.map<Tab>((_Page page) {
             assert(_tabsStyle != null);
@@ -114,6 +123,13 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
             return null;
           }).toList(),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search, color: Colors.white),
+            tooltip: 'Search',
+            onPressed: null,
+          ),
+        ],
       ),
       body: TabBarView(
         controller: _controller,
@@ -128,6 +144,11 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
             ),
           );
         }).toList(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        tooltip: 'Camera',
+        child: Icon(Icons.camera_alt),
       ),
     );
   }

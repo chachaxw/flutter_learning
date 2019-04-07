@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'services/api_service.dart';
 import 'dart:convert';
 import 'dart:async';
+
+import 'scrollable_tabs.dart';
 import 'camera.dart';
 
 main() => runApp(MyApp());
@@ -35,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List newsData;
   bool loading = false;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<ScrollableTabsState> _scrollablTabsKey = GlobalKey<ScrollableTabsState>();
 
   @override
   void initState() {
@@ -154,32 +157,36 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // This widget is the root of your application.
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       // Here we take the value from the MyHomePage object that was created by
+  //       // the App.build method, and use it to set our appbar title.
+  //       title: Text(widget.title),
+  //       actions: <Widget>[
+  //         IconButton(
+  //           icon: Icon(Icons.search, color: Colors.white),
+  //           tooltip: 'Search',
+  //           onPressed: null,
+  //         ),
+  //       ],
+  //     ),
+  //     body: RefreshIndicator(
+  //       key: _refreshIndicatorKey,
+  //       onRefresh: _handleRefresh,
+  //       color: Colors.orange,
+  //       child: _buildNewsList(context, newsData),
+  //     ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _initCamera,
+      //   tooltip: 'Camera',
+      //   child: Icon(Icons.camera_alt),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.white),
-            tooltip: 'Search',
-            onPressed: null,
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: _handleRefresh,
-        color: Colors.orange,
-        child: _buildNewsList(context, newsData),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _initCamera,
-        tooltip: 'Camera',
-        child: Icon(Icons.camera_alt),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    return ScrollableTabs(title: 'News');
   }
 }
