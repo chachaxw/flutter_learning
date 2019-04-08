@@ -54,12 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // To modify the state of the app, use this method
     setState(() {
+      loading = false;
       // Get the JSON data
-      // print(response.body);
       var dataConvertedToJSON = json.decode(response.body);
       // Extract the required part and assign it to the global variable named data
       newsData = dataConvertedToJSON['articles'];
-      loading = false;
     });
   }
 
@@ -73,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           CircularProgressIndicator(valueColor: valueColor),
           Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(16.0),
             child: Text('News Coming...'),
           ),
         ],
@@ -82,14 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildNewsList(BuildContext context, List<dynamic> data) {
-    if (loading) {
-      return _buildLoading();
-    }
-
     return new ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(top: 20.0),
-      itemCount: newsData == null ? 0 : newsData.length,
+      itemCount: newsData != null ? newsData.length : 0,
       itemBuilder: (BuildContext context, int index) {
         var item = data[index];
         var id = item['id'];
@@ -129,7 +123,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildDiscover(BuildContext context) {
+  Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
+    if (loading) {
+      return _buildLoading();
+    }
+
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _handleRefresh,
@@ -143,9 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return ScrollableTabs(
       key: _myHomePageKey,
       title: 'News',
+      initinalIndex: 1,
       pages: [
         Page(icon: Icons.favorite, text: 'Favorite', body: Text('Favorite')),
-        Page(icon: Icons.explore, text: 'Discover', body: _buildDiscover(context)),
+        Page(icon: Icons.explore, text: 'Discover', body: _buildDiscover(context, newsData)),
         Page(icon: Icons.grain, text: 'Hot', body: Text('Hot')),
       ],
     );

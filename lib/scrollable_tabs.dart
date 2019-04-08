@@ -9,22 +9,24 @@ enum TabsStyle {
 }
 
 class ScrollableTabs extends StatefulWidget {
-  ScrollableTabs({ Key key, this.pages, this.title }) : super(key: key);
+  ScrollableTabs({ Key key, this.pages, this.title, this.initinalIndex }) : super(key: key);
 
   final String title;
   final List<Page> pages;
+  final initinalIndex;
 
   @override
-  ScrollableTabsState createState() => ScrollableTabsState(pages: pages);
+  ScrollableTabsState createState() => ScrollableTabsState(pages: pages, initinalIndex: initinalIndex);
 }
 
 class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProviderStateMixin {
-  ScrollableTabsState({ this.pages });
+  ScrollableTabsState({ this.pages, this.initinalIndex });
 
   TabController _controller;
   TabsStyle _tabsStyle = TabsStyle.textOnly;
 
   final List<Page> pages;
+  final initinalIndex;
   bool _customIndicator = false;
 
   @override
@@ -32,7 +34,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
     super.initState();
 
     if (pages != null) {
-      _controller = TabController(vsync: this, length: pages.length);
+      _controller = TabController(initialIndex: initinalIndex, vsync: this, length: pages.length);
     }
   }
 

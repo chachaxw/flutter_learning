@@ -3,8 +3,9 @@ import 'package:http/http.dart' as http;
 class ApiService {
 
   static const String sources = 'techcrunch';
+  static const String country = 'us';
   static const String apiKey = '3a380307164047389f8a34c2827b42fa';
-  final String url = 'https://newsapi.org/v2/top-headlines?sources=$sources&apiKey=$apiKey';
+  final String url = 'https://newsapi.org/v2/top-headlines?country=$country&apiKey=$apiKey';
 
   // Function to get the JSON data
   Future<http.Response> getNewsData() async {
