@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'services/api_service.dart';
 import 'dart:convert';
 import 'dart:async';
 
+import 'services/api_service.dart';
 import 'scrollable_tabs.dart';
-import 'camera.dart';
+import 'page.dart';
 
 main() => runApp(MyApp());
 
@@ -39,12 +38,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final GlobalKey<_MyHomePageState> _myHomePageKey = GlobalKey<_MyHomePageState>();
 
-  // const List<_Page> _allPages = <_Page>[
-  //   _Page(icon: Icons.favorite, text: 'Favorite', body: Text('Favorite')),
-  //   _Page(icon: Icons.explore, text: 'Discover', body: _buildDiscover(context)),
-  //   _Page(icon: Icons.grain, text: 'Hot', body: Text('Hot')),
-  // ];
-
   @override
   void initState() {
     super.initState();
@@ -62,15 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // To modify the state of the app, use this method
     setState(() {
       // Get the JSON data
+      // print(response.body);
       var dataConvertedToJSON = json.decode(response.body);
       // Extract the required part and assign it to the global variable named data
       newsData = dataConvertedToJSON['articles'];
       loading = false;
     });
-  }
-
-  void _initCamera() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => CameraExample()));
   }
 
   Widget _buildLoading() {
@@ -109,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         return new Card(
           key: id,
-          margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 16.0),
+          margin: const EdgeInsets.only(bottom: 16.0),
           child: ListTile(
             contentPadding: const EdgeInsets.all(16.0),
             leading: url != null ? Image.network(
@@ -139,29 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildStack(BuildContext context, DocumentSnapshot document) {
-    return Stack(
-      children: <Widget>[
-        CircleAvatar(
-          backgroundImage: AssetImage(document['avatar']),
-          radius: 56,
-        ),
-        Text(
-          document['username'],
-          style: Theme.of(context).textTheme.title,
-        ),
-        Text(
-          document['phone'],
-          style: Theme.of(context).textTheme.subtitle,
-        ),
-        Text(
-          document['email'],
-          style: Theme.of(context).textTheme.subtitle,
-        ),
-      ],
-    );
-  }
-
   Widget _buildDiscover(BuildContext context) {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -174,8 +141,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return ScrollableTabs(
+      key: _myHomePageKey,
       title: 'News',
-      pages: null,
+      pages: [
+        Page(icon: Icons.favorite, text: 'Favorite', body: Text('Favorite')),
+        Page(icon: Icons.explore, text: 'Discover', body: _buildDiscover(context)),
+        Page(icon: Icons.grain, text: 'Hot', body: Text('Hot')),
+      ],
     );
   }
 }

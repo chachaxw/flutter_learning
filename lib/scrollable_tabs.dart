@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'page.dart';
+import 'user.dart';
 
 enum TabsStyle {
   iconsAndText,
@@ -6,18 +8,11 @@ enum TabsStyle {
   textOnly,
 }
 
-class _Page {
-  const _Page({ this.icon, this.text, this.body });
-  final IconData icon;
-  final String text;
-  final Widget body;
-} 
-
 class ScrollableTabs extends StatefulWidget {
   ScrollableTabs({ Key key, this.pages, this.title }) : super(key: key);
 
   final String title;
-  final List<_Page> pages;
+  final List<Page> pages;
 
   @override
   ScrollableTabsState createState() => ScrollableTabsState(pages: pages);
@@ -29,7 +24,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
   TabController _controller;
   TabsStyle _tabsStyle = TabsStyle.textOnly;
 
-  final List<_Page> pages;
+  final List<Page> pages;
   bool _customIndicator = false;
 
   @override
@@ -45,6 +40,10 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _goUserProfile() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfilePage(title: 'User Profile')));
   }
 
   Decoration getIndicator() {
@@ -112,7 +111,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           controller: _controller,
           isScrollable: false,
           indicator: getIndicator(),
-          tabs: pages.map<Tab>((_Page page) {
+          tabs: pages.map<Tab>((Page page) {
             assert(_tabsStyle != null);
             switch (_tabsStyle) {
               case TabsStyle.iconsAndText:
@@ -135,7 +134,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
       ),
       body: pages != null ? TabBarView(
         controller: _controller,
-        children: pages.map<Widget>((_Page page) {
+        children: pages.map<Widget>((Page page) {
           return SafeArea(
             top: false,
             bottom: false,
@@ -151,9 +150,9 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
         child: Text('No Data'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Camera',
-        child: Icon(Icons.camera_alt),
+        onPressed: _goUserProfile,
+        tooltip: 'User Profile',
+        child: Icon(Icons.face),
       ),
     );
   }
