@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'dart:convert';
 import 'dart:async';
 
@@ -9,6 +11,8 @@ import 'page.dart';
 main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +21,35 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: MyHomePage(title: 'Flutter Learning'),
+      navigatorObservers: <NavigatorObserver>[observer],
+      home: MyHomePage(
+        title: 'Flutter Learning',
+        analytics: analytics,
+        observer: observer,
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title, this.analytics, this.observer}) : super(key: key);
 
   final String title;
+  final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(analytics, observer);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  _MyHomePageState(this.analytics, this.observer);
 
   List newsData;
   bool loading = false;
+  String _message = '';
+  final FirebaseAnalyticsObserver observer;
+  final FirebaseAnalytics analytics;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final GlobalKey<_MyHomePageState> _myHomePageKey = GlobalKey<_MyHomePageState>();
 
@@ -43,6 +58,26 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     setState(() => loading = true);
     this.getNewsData();
+  }
+
+  void setMessage(String message) {
+    setState(() {
+      _message = message;
+    });
+  }
+
+  Future<void> _sendAnalyticsEvent() async {
+    await analytics.logEvent(
+      name: 'test_event',
+      parameters: <String, dynamic>{
+        'string': 'string',
+        'int': 42,
+        'long': 12345678910,
+        'double': 42.0,
+        'bool': true,
+      },
+    );
+    setMessage('logEvent succeeded');
   }
 
   Future<void> _handleRefresh() async {
