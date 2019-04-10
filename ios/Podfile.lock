@@ -30,6 +30,9 @@ PODS:
   - Firebase/MLVision (5.11.0):
     - Firebase/CoreOnly
     - FirebaseMLVision (= 0.12.1)
+  - firebase_analytics (0.0.1):
+    - Firebase/Core
+    - Flutter
   - firebase_core (0.0.1):
     - Firebase/Core
     - Flutter
@@ -178,6 +181,7 @@ PODS:
 DEPENDENCIES:
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
+  - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_ml_vision (from `.symlinks/plugins/firebase_ml_vision/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
@@ -218,6 +222,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/camera/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
+  firebase_analytics:
+    :path: ".symlinks/plugins/firebase_analytics/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_ml_vision:
@@ -236,6 +242,7 @@ SPEC CHECKSUMS:
   camera: d56ad165545ae5a0ffb892376033760a969c68c8
   cloud_firestore: cd6e849ecb8ab43e5a7a5f1f169304ca65436c03
   Firebase: b48f9e653da971ecce5b8c749684bc8bb2d26bd3
+  firebase_analytics: bd50d8f5d3f42dcab6da67944a849062470b0a19
   firebase_core: ce5006bb48508ee4e71e0f429a3f519bb8ee2961
   firebase_ml_vision: 2c3c49ab669d17013ddbe744556462661383181d
   FirebaseAnalytics: 63202d2665de4e6adcbdce189135255d8b5962ba
@@ -266,6 +273,6 @@ SPEC CHECKSUMS:
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   video_player: 3964090a33353060ed7f58aa6427c7b4b208ec21
 
-PODFILE CHECKSUM: aff02bfeed411c636180d6812254b2daeea14d09
+PODFILE CHECKSUM: 3389836f37640698630b8f0670315d626d5f1469
 
 COCOAPODS: 1.6.0.beta.2
