@@ -7,6 +7,7 @@ import 'dart:async';
 import 'services/api_service.dart';
 import 'scrollable_tabs.dart';
 import 'page.dart';
+import 'loading.dart';
 
 main() => runApp(MyApp());
 
@@ -97,24 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Widget _buildLoading() {
-    final Animation<Color> valueColor = new AlwaysStoppedAnimation<Color>(Colors.orange);
-
-    return new Container(
-      alignment: Alignment.center,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          CircularProgressIndicator(valueColor: valueColor),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text('News Coming...'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildNewsList(BuildContext context, List<dynamic> data) {
     return new ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -160,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
     if (loading) {
-      return _buildLoading();
+      return Loading(tip: 'News Coming...');
     }
 
     return RefreshIndicator(

@@ -104,7 +104,6 @@ class  UserProfileState extends State<UserProfilePage> {
             snap: _appBarBehavior == AppBarBehavior.snapping,
             actions: <Widget>[],
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text('User Profile'),
               background: _buildUserStream(context),
             ),
           )
