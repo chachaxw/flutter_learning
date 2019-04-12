@@ -21,7 +21,7 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class  UserProfileState extends State<UserProfilePage> {
-  static final GlobalKey<UserProfileState> _userProfileKey = GlobalKey<UserProfileState>();
+  static final GlobalKey<ScaffoldState> _userProfileKey = GlobalKey<ScaffoldState>();
   final double _appBarHeight = 256.0;
 
   AppBarBehavior _appBarBehavior = AppBarBehavior.pinned;
@@ -102,11 +102,39 @@ class  UserProfileState extends State<UserProfilePage> {
             pinned: _appBarBehavior == AppBarBehavior.pinned,
             floating: _appBarBehavior == AppBarBehavior.floating || _appBarBehavior == AppBarBehavior.snapping,
             snap: _appBarBehavior == AppBarBehavior.snapping,
-            actions: <Widget>[],
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.create),
+                tooltip: 'Edit',
+                onPressed: () {
+                  _userProfileKey.currentState.showSnackBar(const SnackBar(
+                    content: Text("Editing isn't supported in this screen."),
+                  ));
+                },
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: _buildUserStream(context),
             ),
-          )
+          ),
+          SliverGrid(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200.0,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
+              childAspectRatio: 2,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  alignment: Alignment.center,
+                  color: Colors.indigo[100 * (index % 9)],
+                  child: Text('Grid Item $index'),
+                );
+              },
+              childCount: 30,
+            ),
+          ),
         ],
       ),
     );
