@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'page.dart';
-import 'user.dart';
+import '../pages/page.dart';
 
 enum TabsStyle {
   iconsAndText,
@@ -15,6 +14,7 @@ class ScrollableTabs extends StatefulWidget {
     this.initinalIndex,
     this.tabsStyle,
     this.isScrollable,
+    this.floatingActionButton,
     @required this.pages,
   }) : super(key: key);
 
@@ -23,6 +23,7 @@ class ScrollableTabs extends StatefulWidget {
   final List<Page> pages;
   final initinalIndex;
   final bool isScrollable;
+  final FloatingActionButton floatingActionButton;
 
   @override
   ScrollableTabsState createState() => ScrollableTabsState(
@@ -30,11 +31,18 @@ class ScrollableTabs extends StatefulWidget {
     initinalIndex: initinalIndex,
     tabsStyle: tabsStyle,
     isScrollable: isScrollable,
+    floatingActionButton: floatingActionButton,
   );
 }
 
 class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProviderStateMixin {
-  ScrollableTabsState({ this.pages, this.initinalIndex, this.tabsStyle, this.isScrollable });
+  ScrollableTabsState({
+    this.pages,
+    this.initinalIndex,
+    this.tabsStyle,
+    this.isScrollable,
+    this.floatingActionButton,
+  });
 
   TabController _controller;
 
@@ -42,6 +50,8 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
   final initinalIndex;
   final TabsStyle tabsStyle;
   final bool isScrollable;
+  final FloatingActionButton floatingActionButton;
+
   bool _customIndicator = false;
 
   @override
@@ -54,10 +64,6 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  void _goUserProfile() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfilePage(title: 'User Profile')));
   }
 
   Decoration getIndicator() {
@@ -160,11 +166,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           );
         }).toList(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _goUserProfile,
-        tooltip: 'User Profile',
-        child: Icon(Icons.face),
-      ),
+      floatingActionButton: floatingActionButton,
     );
   }
 }

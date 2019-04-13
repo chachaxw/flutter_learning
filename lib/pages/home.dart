@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:async';
+import 'page.dart';
 
+import 'user.dart';
 import '../services/api_service.dart';
-import '../scrollable_tabs.dart';
-import '../page.dart';
-import '../loading.dart';
+import '../widgets/scrollable_tabs.dart';
+import '../widgets/loading.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -14,6 +15,14 @@ class HomePage extends StatefulWidget {
 
   @override
   HomePageState createState() => HomePageState();
+}
+
+class Discover extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
 }
 
 class HomePageState extends State<HomePage> {
@@ -29,6 +38,10 @@ class HomePageState extends State<HomePage> {
     super.initState();
     setState(() => loading = true);
     this.getNewsData();
+  }
+
+  void _goUserProfile() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfilePage(title: 'User Profile')));
   }
 
   Future<void> _handleRefresh() async {
@@ -110,18 +123,24 @@ class HomePageState extends State<HomePage> {
         Page(
           icon: Icons.favorite,
           text: 'Favorite',
-          body: Text('Favorite'),
+          body: Text('Favorite News'),
         ),
         Page(
           icon: Icons.explore,
           text: 'Discover',
-          body: loading ? Loading(tip: 'News Coming...') : _buildDiscover(context, newsData)),
+          body: Text('Discover News'),
+        ),
         Page(
           icon: Icons.grain,
           text: 'Hot',
-          body: Text('Hot'),
+          body: Text('Hot News'),
         ),
       ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: _goUserProfile,
+        tooltip: 'User Profile',
+        child: Icon(Icons.face),
+      ),
     );
   }
 }

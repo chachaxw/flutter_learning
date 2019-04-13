@@ -1,8 +1,9 @@
-import 'utils.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
+
+import '../utils.dart';
 
 List<CameraDescription> cameras;
 
