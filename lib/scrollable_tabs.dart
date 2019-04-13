@@ -9,33 +9,45 @@ enum TabsStyle {
 }
 
 class ScrollableTabs extends StatefulWidget {
-  ScrollableTabs({ Key key, this.pages, this.title, this.initinalIndex }) : super(key: key);
+  ScrollableTabs({
+    Key key,
+    this.title,
+    this.initinalIndex,
+    this.tabsStyle,
+    this.isScrollable,
+    @required this.pages,
+  }) : super(key: key);
 
   final String title;
+  final TabsStyle tabsStyle;
   final List<Page> pages;
   final initinalIndex;
+  final bool isScrollable;
 
   @override
-  ScrollableTabsState createState() => ScrollableTabsState(pages: pages, initinalIndex: initinalIndex);
+  ScrollableTabsState createState() => ScrollableTabsState(
+    pages: pages,
+    initinalIndex: initinalIndex,
+    tabsStyle: tabsStyle,
+    isScrollable: isScrollable,
+  );
 }
 
 class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProviderStateMixin {
-  ScrollableTabsState({ this.pages, this.initinalIndex });
+  ScrollableTabsState({ this.pages, this.initinalIndex, this.tabsStyle, this.isScrollable });
 
   TabController _controller;
-  TabsStyle _tabsStyle = TabsStyle.textOnly;
 
   final List<Page> pages;
   final initinalIndex;
+  final TabsStyle tabsStyle;
+  final bool isScrollable;
   bool _customIndicator = false;
 
   @override
   void initState() {
     super.initState();
-
-    if (pages != null) {
-      _controller = TabController(initialIndex: initinalIndex, vsync: this, length: pages.length);
-    }
+    _controller = TabController(initialIndex: initinalIndex, vsync: this, length: pages.length);
   }
 
   @override
@@ -53,7 +65,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
       return UnderlineTabIndicator();
     }
 
-    switch (_tabsStyle) {
+    switch (tabsStyle) {
       case TabsStyle.iconsAndText:
         return ShapeDecoration(
           shape: const RoundedRectangleBorder(
@@ -109,23 +121,23 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        bottom: pages != null ? TabBar(
+        bottom: TabBar(
           controller: _controller,
           isScrollable: false,
           indicator: getIndicator(),
           tabs: pages.map<Tab>((Page page) {
-            assert(_tabsStyle != null);
-            switch (_tabsStyle) {
+            switch (tabsStyle) {
               case TabsStyle.iconsAndText:
                 return Tab(text: page.text, icon: Icon(page.icon));
               case TabsStyle.iconsOnly:
                 return Tab(icon: Icon(page.icon));
               case TabsStyle.textOnly:
                 return Tab(text: page.text);
+              default:
+                return Tab(text: page.text);
             }
-            return null;
           }).toList(),
-        ) : null,
+        ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
@@ -134,7 +146,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           ),
         ],
       ),
-      body: pages != null ? TabBarView(
+      body: TabBarView(
         controller: _controller,
         children: pages.map<Widget>((Page page) {
           return SafeArea(
@@ -147,9 +159,6 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
             ),
           );
         }).toList(),
-      ) : Container(
-        alignment: Alignment.center,
-        child: Text('No Data'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _goUserProfile,
