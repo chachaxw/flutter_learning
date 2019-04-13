@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:async';
 import 'page.dart';
 
-import 'user.dart';
-import '../services/api_service.dart';
-import '../widgets/scrollable_tabs.dart';
-import '../widgets/loading.dart';
+import 'package:flutter_learning/pages/user.dart';
+import 'package:flutter_learning/services/api_service.dart';
+import 'package:flutter_learning/widgets/scrollable_tabs.dart';
+import 'package:flutter_learning/widgets/loading.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -21,7 +21,7 @@ class Discover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return null;
+    return Text('Discover News');
   }
 }
 

@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux_logging/redux_logging.dart';
 import 'package:redux/redux.dart';
 
-import 'pages/home.dart';
-
-// One simple action: Increment
-enum Actions {
-  Increment,
-  Decrement,
-}
-
-// The reducer, which takes the previous count and increments it in response
-// to an Increment action.
-int counterReducer(int state, dynamic action) {
-  switch (action) {
-    case Actions.Increment:
-      return state + 1;
-    case Actions.Decrement:
-      return state - 1;
-    default:
-      return state;
-  }
-}
+import 'package:flutter_learning/models/app_state.dart';
+import 'package:flutter_learning/reducers/app_reducer.dart';
+import 'package:flutter_learning/pages/home.dart';
 
 void main() {
-  final store = new Store<int>(counterReducer, initialState: 0);
+  final store = new Store<AppState>(
+    appReducer,
+    initialState: new AppState(),
+    middleware: [new LoggingMiddleware.printer()],
+  );
 
   runApp(App(store: store));
 }
 
 class App extends StatelessWidget {
-  final Store<int> store;
+  final Store<AppState> store;
 
   App({ this.store }) : super();
 

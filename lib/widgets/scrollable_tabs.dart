@@ -129,7 +129,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
         title: Text(widget.title),
         bottom: TabBar(
           controller: _controller,
-          isScrollable: false,
+          isScrollable: isScrollable ?? false,
           indicator: getIndicator(),
           tabs: pages.map<Tab>((Page page) {
             switch (tabsStyle) {

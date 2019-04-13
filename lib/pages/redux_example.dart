@@ -65,6 +65,7 @@ class ReduxExampleState extends State<ReduxExample> {
                         // Attach the `callback` to the `onPressed` attribute
                         onPressed: callback,
                         shape: CircleBorder(),
+                        padding: EdgeInsets.all(12.0),
                         child: Icon(Icons.remove),
                       );
                     },
@@ -78,6 +79,7 @@ class ReduxExampleState extends State<ReduxExample> {
                         // Attach the `callback` to the `onPressed` attribute
                         onPressed: callback,
                         shape: CircleBorder(),
+                        padding: EdgeInsets.all(12.0),
                         child: Icon(Icons.add),
                       );
                     },
