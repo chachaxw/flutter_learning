@@ -49,8 +49,9 @@ class ReduxExampleState extends State<ReduxExample> {
                         // Attach the `decrese` to the `onPressed` attribute
                         onPressed: decrese,
                         shape: CircleBorder(),
-                        padding: EdgeInsets.all(12.0),
-                        child: Icon(Icons.remove),
+                        color: Colors.orange,
+                        padding: EdgeInsets.all(16.0),
+                        child: Icon(Icons.remove, color: Colors.white),
                       );
                     },
                   ),
@@ -63,8 +64,9 @@ class ReduxExampleState extends State<ReduxExample> {
                         // Attach the `increse` to the `onPressed` attribute
                         onPressed: increse,
                         shape: CircleBorder(),
-                        padding: EdgeInsets.all(12.0),
-                        child: Icon(Icons.add),
+                        color: Colors.orange,
+                        padding: EdgeInsets.all(16.0),
+                        child: Icon(Icons.add, color: Colors.white),
                       );
                     },
                   ),
