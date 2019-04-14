@@ -2,24 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-// One simple action: Increment
-enum Actions {
-  Increment,
-  Decrement,
-}
-
-// The reducer, which takes the previous count and increments it in response
-// to an Increment action.
-int counterReducer(int state, dynamic action) {
-  switch (action) {
-    case Actions.Increment:
-      return state + 1;
-    case Actions.Decrement:
-      return state - 1;
-    default:
-      return state;
-  }
-}
+import 'package:flutter_learning/models/app_state.dart';
+import 'package:flutter_learning/actions/counter_actions.dart';
 
 class ReduxExample extends StatefulWidget {
 
@@ -42,11 +26,11 @@ class ReduxExampleState extends State<ReduxExample> {
               'You have pressed the button this many times:',
             ),
             // Connect the Store to a Text Widget that renders the current count
-            new StoreConnector<int, String>(
-              converter: (store) => store.state.toString(),
-              builder: (context, count) {
+            new StoreConnector<AppState, _ViewModel>(
+              converter: _ViewModel.fromStore,
+              builder: (context, _ViewModel vm) {
                 return Text(
-                  count,
+                  vm.count.toString(),
                   style: Theme.of(context).textTheme.display4,
                 );
               },
@@ -56,28 +40,28 @@ class ReduxExampleState extends State<ReduxExample> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  StoreConnector<int, VoidCallback>(
-                    converter: (store) {
-                      return () => store.dispatch(Actions.Decrement);
+                  StoreConnector<AppState, VoidCallback>(
+                    converter: (Store<AppState> store) {
+                      return () => store.dispatch(new DecrememtCountAction());
                     },
-                    builder: (context, callback) {
+                    builder: (context, VoidCallback decrese) {
                       return RaisedButton(
-                        // Attach the `callback` to the `onPressed` attribute
-                        onPressed: callback,
+                        // Attach the `decrese` to the `onPressed` attribute
+                        onPressed: decrese,
                         shape: CircleBorder(),
                         padding: EdgeInsets.all(12.0),
                         child: Icon(Icons.remove),
                       );
                     },
                   ),
-                  StoreConnector<int, VoidCallback>(
-                    converter: (store) {
-                      return () => store.dispatch(Actions.Increment);
+                  StoreConnector<AppState, VoidCallback>(
+                    converter: (Store<AppState> store) {
+                      return () => store.dispatch(new IncrementCountAction());
                     },
-                    builder: (context, callback) {
+                    builder: (context, VoidCallback increse) {
                       return RaisedButton(
-                        // Attach the `callback` to the `onPressed` attribute
-                        onPressed: callback,
+                        // Attach the `increse` to the `onPressed` attribute
+                        onPressed: increse,
                         shape: CircleBorder(),
                         padding: EdgeInsets.all(12.0),
                         child: Icon(Icons.add),
@@ -92,4 +76,23 @@ class ReduxExampleState extends State<ReduxExample> {
       ),
     );
   }
+}
+
+class _ViewModel {
+  _ViewModel({
+    @required this.count
+  });
+
+  final int count;
+
+  // This is simply a constructor method.
+	// This creates a new instance of this _viewModel
+	// with the proper data from the Store.
+	//
+	// This is a very simple example, but it lets our
+	// actual counter widget do things like call 'vm.count'
+  static _ViewModel fromStore(Store<AppState> store) {
+    return new _ViewModel(count: store.state.count);
+  }
+
 }

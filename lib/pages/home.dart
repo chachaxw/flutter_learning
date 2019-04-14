@@ -7,6 +7,7 @@ import 'package:flutter_learning/pages/user.dart';
 import 'package:flutter_learning/services/api_service.dart';
 import 'package:flutter_learning/widgets/scrollable_tabs.dart';
 import 'package:flutter_learning/widgets/loading.dart';
+import 'package:flutter_learning/widgets/navigation_bar.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -113,34 +114,36 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('[ProductsManager State] build');
-    return ScrollableTabs(
-      key: _homePageKey,
-      title: 'News',
-      initinalIndex: 1,
-      tabsStyle: TabsStyle.iconsOnly,
-      pages: [
-        Page(
-          icon: Icons.favorite,
-          text: 'Favorite',
-          body: Text('Favorite News'),
-        ),
-        Page(
-          icon: Icons.explore,
-          text: 'Discover',
-          body: Text('Discover News'),
-        ),
-        Page(
-          icon: Icons.grain,
-          text: 'Hot',
-          body: Text('Hot News'),
-        ),
-      ],
-      floatingActionButton: FloatingActionButton(
-        onPressed: _goUserProfile,
-        tooltip: 'User Profile',
-        child: Icon(Icons.face),
-      ),
-    );
+    print('[ProductsManager State] build and loading status $loading');
+
+    // return new ScrollableTabs(
+    //   key: _homePageKey,
+    //   title: 'News',
+    //   initinalIndex: 1,
+    //   tabsStyle: TabsStyle.iconsOnly,
+    //   pages: [
+    //     Page(
+    //       icon: Icons.favorite,
+    //       text: 'Favorite',
+    //       body: Text('Favorite News'),
+    //     ),
+    //     Page(
+    //       icon: Icons.explore,
+    //       text: 'Discover',
+    //       body: loading ? Loading(tip: 'News Coming...') : Discover(),
+    //     ),
+    //     Page(
+    //       icon: Icons.grain,
+    //       text: 'Hot',
+    //       body: Text('Hot News'),
+    //     ),
+    //   ],
+    //   floatingActionButton: FloatingActionButton(
+    //     onPressed: _goUserProfile,
+    //     tooltip: 'User Profile',
+    //     child: Icon(Icons.face),
+    //   ),
+    // );
+    return NavigationBar();
   }
 }
