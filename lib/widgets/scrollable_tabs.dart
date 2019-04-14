@@ -15,42 +15,50 @@ class ScrollableTabs extends StatefulWidget {
     this.tabsStyle,
     this.isScrollable,
     this.floatingActionButton,
+    this.bottomNavigationBar,
     @required this.pages,
   }) : super(key: key);
 
-  final String title;
+  final Widget title;
   final TabsStyle tabsStyle;
   final List<Page> pages;
   final initinalIndex;
   final bool isScrollable;
   final FloatingActionButton floatingActionButton;
+  final BottomNavigationBar bottomNavigationBar;
 
   @override
   ScrollableTabsState createState() => ScrollableTabsState(
     pages: pages,
+    title: title,
     initinalIndex: initinalIndex,
     tabsStyle: tabsStyle,
     isScrollable: isScrollable,
     floatingActionButton: floatingActionButton,
+    bottomNavigationBar: bottomNavigationBar,
   );
 }
 
 class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProviderStateMixin {
   ScrollableTabsState({
     this.pages,
+    this.title,
     this.initinalIndex,
     this.tabsStyle,
     this.isScrollable,
     this.floatingActionButton,
+    this.bottomNavigationBar,
   });
 
   TabController _controller;
 
+  final Widget title;
   final List<Page> pages;
   final initinalIndex;
   final TabsStyle tabsStyle;
   final bool isScrollable;
   final FloatingActionButton floatingActionButton;
+  final BottomNavigationBar bottomNavigationBar;
 
   bool _customIndicator = false;
 
@@ -126,7 +134,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: title,
         bottom: TabBar(
           controller: _controller,
           isScrollable: isScrollable ?? false,
@@ -167,6 +175,7 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
         }).toList(),
       ),
       floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomNavigationBar,
     );
   }
 }

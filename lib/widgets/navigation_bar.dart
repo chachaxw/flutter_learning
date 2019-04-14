@@ -28,15 +28,64 @@ class NavigationIconView {
   final BottomNavigationBarItem item;
   final AnimationController controller;
   Animation<double> _animation;
+
+  FadeTransition transition(BottomNavigationBarType type, BuildContext context) {
+    Color iconColor;
+
+    if (type == BottomNavigationBarType.shifting) {
+      iconColor = _color;
+    } else {
+      final ThemeData themeData = Theme.of(context);
+      iconColor = themeData.brightness == Brightness.light ?
+        themeData.primaryColor : themeData.accentColor;
+    }
+
+    return FadeTransition(
+      opacity: _animation,
+      child: SlideTransition(
+        position: _animation.drive(
+          Tween<Offset>(
+            begin: const Offset(0.0, 0.02), // Slightly down.
+            end: Offset.zero,
+          ),
+        ),
+        child: IconTheme(
+          data: IconThemeData(
+            color: iconColor,
+            size: 120.0,
+          ),
+          child: Semantics(
+            label: 'Placeholder for $_title tab',
+            child: _icon,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class NavigationBar extends StatefulWidget {
+  NavigationBar({Key key, this.appBar, this.body, this.floatingActionButton}) : super(key: key);
+
+  final Widget appBar;
+  final Widget body;
+  final FloatingActionButton floatingActionButton;
+
   @override
-  NavigationBarState createState() => NavigationBarState();
+  NavigationBarState createState() => NavigationBarState(
+    appBar: appBar,
+    body: body,
+    floatingActionButton: floatingActionButton
+  );
 }
 
 class NavigationBarState extends State<NavigationBar> with TickerProviderStateMixin {
+  NavigationBarState({this.appBar, this.body, this.floatingActionButton});
+
   int _currentIndex = 0;
+  final Widget appBar;
+  final Widget body;
+  final FloatingActionButton floatingActionButton;
   BottomNavigationBarType _type = BottomNavigationBarType.fixed;
   List<NavigationIconView> _views;
 
@@ -90,11 +139,10 @@ class NavigationBarState extends State<NavigationBar> with TickerProviderStateMi
     );
    
     return Scaffold(
-      appBar: null,
-      body: Center(
-        child: Text('This is a NavigationBar'),
-      ),
+      appBar: appBar,
+      body: body,
       bottomNavigationBar: navBar,
+      floatingActionButton: floatingActionButton,
     );
   }
 }
