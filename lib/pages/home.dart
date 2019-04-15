@@ -59,8 +59,6 @@ class HomePageState extends State<HomePage> {
   }
 
   Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
-    // print(newsData.toString());
-
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _handleRefresh,
@@ -108,6 +106,22 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  showLoadingDialog() {
+    if (newsData.length == 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  getBody() {
+    if (showLoadingDialog()) {
+      return Loading(tip: 'News Coming...');
+    } else {
+      return _buildDiscover(context, newsData);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print('[ProductsManager State] build and loading status $loading');
@@ -126,7 +140,7 @@ class HomePageState extends State<HomePage> {
           Page(
             icon: Icons.explore,
             text: 'Discover',
-            body: Discover(),
+            body: getBody(),
           ),
           Page(
             icon: Icons.grain,
