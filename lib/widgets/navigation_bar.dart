@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_learning/pages/home.dart';
+import 'package:flutter_learning/pages/redux_example.dart';
+import 'package:flutter_learning/pages/user.dart';
 
 class NavigationIconView {
   NavigationIconView({
@@ -111,6 +114,19 @@ class NavigationBarState extends State<NavigationBar> with TickerProviderStateMi
     super.dispose();
   }
 
+  _buildBody(BuildContext context, int index) {
+    switch (index) {
+      case 0:
+        return HomePage();
+      case 1:
+        return ReduxExample();
+      case 2:
+        return UserProfilePage();
+      default:
+        return HomePage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final BottomNavigationBar navBar = BottomNavigationBar(
@@ -127,7 +143,7 @@ class NavigationBarState extends State<NavigationBar> with TickerProviderStateMi
     );
    
     return Scaffold(
-      body: Text('body'),
+      body: _buildBody(context, _currentIndex),
       bottomNavigationBar: navBar,
     );
   }

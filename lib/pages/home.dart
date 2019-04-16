@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'page.dart';
 
 import 'package:flutter_learning/services/api_service.dart';
 import 'package:flutter_learning/widgets/scrollable_tabs.dart';
+import 'package:flutter_learning/actions/home_actions.dart';
+import 'package:flutter_learning/models/app_state.dart';
 import 'package:flutter_learning/widgets/loading.dart';
-import 'package:flutter_learning/pages/redux_example.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -17,18 +20,9 @@ class HomePage extends StatefulWidget {
   HomePageState createState() => HomePageState();
 }
 
-class Discover extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Text('Discover News');
-  }
-}
-
 class HomePageState extends State<HomePage> {
   HomePageState();
 
-  List newsData;
   bool loading = false;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final GlobalKey<HomePageState> _homePageKey = GlobalKey<HomePageState>();
@@ -36,24 +30,10 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    setState(() => loading = true);
   }
 
-  Future<void> _handleRefresh() async {
-    await this.getNewsData();
-  }
-
-  Future<void> getNewsData() async {
-    var response = await ApiService().getNewsData();
-
-    // To modify the state of the app, use this method
-    setState(() {
-      loading = false;
-      // Get the JSON data
-      var dataConvertedToJSON = json.decode(response.body);
-      // Extract the required part and assign it to the global variable named data
-      newsData = dataConvertedToJSON['articles'];
-    });
+  _handleRefresh() {
+    print('Refresh');
   }
 
   Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
@@ -104,29 +84,13 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  showLoadingDialog() {
-    if (newsData.length == 0) {
-      return true;
-    }
-
-    return false;
-  }
-
-  getBody() {
-    if (showLoadingDialog()) {
-      return Loading(tip: 'News Coming...');
-    } else {
-      return _buildDiscover(context, newsData);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     print('[ProductsManager State] build and loading status $loading');
 
     return new ScrollableTabs(
       key: _homePageKey,
-      title: Text(widget.title),
+      title: Text('News'),
       initinalIndex: 1,
       tabsStyle: TabsStyle.iconsOnly,
       pages: [
@@ -138,14 +102,37 @@ class HomePageState extends State<HomePage> {
         Page(
           icon: Icons.explore,
           text: 'Discover',
-          body: getBody(),
+          body: StoreConnector<AppState, _ViewModel>(
+            converter: _ViewModel.fromStore,
+            builder: (context, _ViewModel vm) {
+              return _buildDiscover(context, vm.newsList);
+            },
+          ),
         ),
         Page(
           icon: Icons.grain,
           text: 'Hot',
-          body: ReduxExample(),
+          body: Text('Hot'),
         ),
       ],
     );
+  }
+}
+
+class _ViewModel {
+  _ViewModel({
+    @required this.newsList
+  });
+
+  final List<dynamic> newsList;
+
+  // This is simply a constructor method.
+	// This creates a new instance of this _viewModel
+	// with the proper data from the Store.
+	//
+	// This is a very simple example, but it lets our
+	// actual counter widget do things like call 'vm.count'
+  static _ViewModel fromStore(Store<AppState> store) {
+    return new _ViewModel(newsList: store.state.newsList);
   }
 }
