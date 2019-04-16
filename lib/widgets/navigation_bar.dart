@@ -65,27 +65,15 @@ class NavigationIconView {
 }
 
 class NavigationBar extends StatefulWidget {
-  NavigationBar({Key key, this.appBar, this.body, this.floatingActionButton}) : super(key: key);
-
-  final Widget appBar;
-  final Widget body;
-  final FloatingActionButton floatingActionButton;
+  NavigationBar({Key key}) : super(key: key);
 
   @override
-  NavigationBarState createState() => NavigationBarState(
-    appBar: appBar,
-    body: body,
-    floatingActionButton: floatingActionButton
-  );
+  NavigationBarState createState() => NavigationBarState();
 }
 
 class NavigationBarState extends State<NavigationBar> with TickerProviderStateMixin {
-  NavigationBarState({this.appBar, this.body, this.floatingActionButton});
 
   int _currentIndex = 0;
-  final Widget appBar;
-  final Widget body;
-  final FloatingActionButton floatingActionButton;
   BottomNavigationBarType _type = BottomNavigationBarType.fixed;
   List<NavigationIconView> _views;
 
@@ -139,10 +127,8 @@ class NavigationBarState extends State<NavigationBar> with TickerProviderStateMi
     );
    
     return Scaffold(
-      appBar: appBar,
-      body: body,
+      body: Text('body'),
       bottomNavigationBar: navBar,
-      floatingActionButton: floatingActionButton,
     );
   }
 }

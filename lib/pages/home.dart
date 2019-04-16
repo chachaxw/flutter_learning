@@ -5,7 +5,6 @@ import 'page.dart';
 
 import 'package:flutter_learning/services/api_service.dart';
 import 'package:flutter_learning/widgets/scrollable_tabs.dart';
-import 'package:flutter_learning/widgets/navigation_bar.dart';
 import 'package:flutter_learning/widgets/loading.dart';
 import 'package:flutter_learning/pages/redux_example.dart';
 
@@ -38,7 +37,6 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     setState(() => loading = true);
-    this.getNewsData();
   }
 
   Future<void> _handleRefresh() async {
@@ -126,29 +124,28 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     print('[ProductsManager State] build and loading status $loading');
 
-    return new NavigationBar(
-      body: new ScrollableTabs(
-        title: Text(widget.title),
-        initinalIndex: 1,
-        tabsStyle: TabsStyle.iconsOnly,
-        pages: [
-          Page(
-            icon: Icons.favorite,
-            text: 'Favorite',
-            body: Text('Favorite News'),
-          ),
-          Page(
-            icon: Icons.explore,
-            text: 'Discover',
-            body: getBody(),
-          ),
-          Page(
-            icon: Icons.grain,
-            text: 'Hot',
-            body: ReduxExample(),
-          ),
-        ],
-      ),
+    return new ScrollableTabs(
+      key: _homePageKey,
+      title: Text(widget.title),
+      initinalIndex: 1,
+      tabsStyle: TabsStyle.iconsOnly,
+      pages: [
+        Page(
+          icon: Icons.favorite,
+          text: 'Favorite',
+          body: Text('Favorite News'),
+        ),
+        Page(
+          icon: Icons.explore,
+          text: 'Discover',
+          body: getBody(),
+        ),
+        Page(
+          icon: Icons.grain,
+          text: 'Hot',
+          body: ReduxExample(),
+        ),
+      ],
     );
   }
 }
