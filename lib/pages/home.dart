@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'dart:convert';
-import 'dart:async';
 import 'page.dart';
 
-import 'package:flutter_learning/services/api_service.dart';
 import 'package:flutter_learning/widgets/scrollable_tabs.dart';
 import 'package:flutter_learning/actions/home_actions.dart';
 import 'package:flutter_learning/models/app_state.dart';
@@ -23,9 +20,8 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   HomePageState();
 
-  bool loading = false;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final GlobalKey<HomePageState> _homePageKey = GlobalKey<HomePageState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -86,7 +82,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('[ProductsManager State] build and loading status $loading');
+    StoreProvider.of<AppState>(context).dispatch(getNewsListAction);
 
     return new ScrollableTabs(
       key: _homePageKey,
@@ -105,7 +101,7 @@ class HomePageState extends State<HomePage> {
           body: StoreConnector<AppState, _ViewModel>(
             converter: _ViewModel.fromStore,
             builder: (context, _ViewModel vm) {
-              return _buildDiscover(context, vm.newsList);
+              return vm.isLoading ? Loading(tip: 'News Coming...') : _buildDiscover(context, vm.newsList);
             },
           ),
         ),
@@ -121,18 +117,20 @@ class HomePageState extends State<HomePage> {
 
 class _ViewModel {
   _ViewModel({
-    @required this.newsList
+    @required this.newsList,
+    @required this.isLoading,
   });
 
   final List<dynamic> newsList;
+  final bool isLoading;
 
   // This is simply a constructor method.
 	// This creates a new instance of this _viewModel
 	// with the proper data from the Store.
-	//
-	// This is a very simple example, but it lets our
-	// actual counter widget do things like call 'vm.count'
   static _ViewModel fromStore(Store<AppState> store) {
-    return new _ViewModel(newsList: store.state.newsList);
+    return new _ViewModel(
+      newsList: store.state.newsList,
+      isLoading: store.state.isLoading,
+    );
   }
 }
