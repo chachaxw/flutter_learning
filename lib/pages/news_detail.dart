@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image/network.dart';
 
-class NewsDetail extends StatefulWidget {
+class NewsDetailPage extends StatefulWidget {
+  NewsDetailPage({
+    Key key,
+    @required this.url,
+    @required this.title,
+    @required this.content,
+    @required this.urlToImage,
+    @required this.publishedAt
+  }) : super(key: key);
+
+  final String url;
+  final String title;
+  final String content;
+  final String urlToImage;
+  final String publishedAt;
 
   @override
   State<StatefulWidget> createState() => NewsDetailState();
 }
 
-class NewsDetailState extends State<NewsDetail> {
+class NewsDetailState extends State<NewsDetailPage> {
+  NewsDetailState({ this.url, this.title, this.content, this.urlToImage , this.publishedAt});
+
+  final String url;
+  final String title;
+  final String content;
+  final String urlToImage;
+  final String publishedAt;
+
   final double _appBarHeight = 256.0;
   static final GlobalKey<ScaffoldState> _newsDetailKey = GlobalKey<ScaffoldState>();
 
-  Widget _buildStack(BuildContext context, String imgUrl) {
-
+  Widget _buildStack(BuildContext context, String urlToImage) {
     var backgroundImage = Image(
       fit: BoxFit.cover,
-      image: new NetworkImageWithRetry(imgUrl),
+      image: new NetworkImageWithRetry(urlToImage),
     );
 
     return Stack(
@@ -58,7 +79,25 @@ class NewsDetailState extends State<NewsDetail> {
           ],
           flexibleSpace: FlexibleSpaceBar(
             centerTitle: false,
+            title: Text(
+              title ?? '',
+              maxLines: 3,
+              style: Theme.of(context).textTheme.display3,
+            ),
+            background: _buildStack(context, urlToImage),
           ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            <Widget>[
+              Container(
+                child: Text(
+                  content ?? '',
+                  style: Theme.of(context).textTheme.body1,
+                ),
+              ),
+            ],
+          )
         ),
       ],
     );

@@ -4,7 +4,9 @@ import 'package:flutter_image/network.dart';
 import 'package:redux/redux.dart';
 import 'page.dart';
 
+import 'package:flutter_learning/pages/news_detail.dart';
 import 'package:flutter_learning/widgets/scrollable_tabs.dart';
+import 'package:flutter_learning/actions/loading_actions.dart';
 import 'package:flutter_learning/actions/home_actions.dart';
 import 'package:flutter_learning/models/app_state.dart';
 import 'package:flutter_learning/widgets/loading.dart';
@@ -33,6 +35,26 @@ class HomePageState extends State<HomePage> {
     StoreProvider.of<AppState>(context).dispatch(getNewsListAction);
   }
 
+  _viewDetails(
+    BuildContext context,
+    String url,
+    String title,
+    String content,
+    String urlToImage,
+    String publishedAt
+  ) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => NewsDetailPage(
+        url: url,
+        title: title,
+        content: content,
+        urlToImage: urlToImage,
+        publishedAt: publishedAt,
+      )),
+    );
+  }
+
   Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -43,43 +65,50 @@ class HomePageState extends State<HomePage> {
         itemCount: newsData.length,
         itemBuilder: (BuildContext context, int index) {
           var item = newsData[index];
-          var id = item['id'];
-          var url = item['urlToImage'];
+          var url = item['url'];
           var title = item['title'];
+          var content = item['content'];
+          var urlToImage = item['urlToImage'];
           var description = item['description'];
+          var publishedAt = item['publishedAt'];
 
           var avatar = Image(
             width: 80,
             height: 80,
             fit: BoxFit.cover,
-            image: new NetworkImageWithRetry(url),
+            image: new NetworkImageWithRetry(urlToImage),
           );
 
-          return new Card(
-            key: id,
-            margin: const EdgeInsets.only(bottom: 16.0),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(16.0),
-              leading: Container(
-                width: 80.0,
-                alignment: Alignment.center,
-                child: url != null ? avatar : 
-                Icon(
-                  Icons.landscape,
-                  color: Colors.grey,
-                  size: 80.0,
+          return GestureDetector(
+            onTap: () => _viewDetails(context, url, title, content, urlToImage, publishedAt),
+            child: new Card(
+              margin: const EdgeInsets.only(bottom: 16.0),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(16.0),
+                leading: Container(
+                  width: 80.0,
+                  alignment: Alignment.topCenter,
+                  child: urlToImage != null ? avatar : 
+                  Icon(
+                    Icons.landscape,
+                    color: Colors.grey,
+                    size: 80.0,
+                  ),
                 ),
-              ),
-              title: Text(
-                title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(
-                description,
-                maxLines: 3,
-                textAlign: TextAlign.justify,
-                overflow: TextOverflow.ellipsis,
+                title: Container(
+                  padding: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                subtitle: Text(
+                  description,
+                  maxLines: 3,
+                  textAlign: TextAlign.justify,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           );
@@ -111,7 +140,8 @@ class HomePageState extends State<HomePage> {
               return vm.isLoading ? Loading(tip: 'News Coming...') : _buildDiscover(context, vm.newsList);
             },
             onInit: (Store<AppState> store) {
-              StoreProvider.of<AppState>(context).dispatch(getNewsListAction(store));
+              StoreProvider.of<AppState>(context).dispatch(LoadingStartAction());
+              StoreProvider.of<AppState>(context).dispatch(getNewsListAction);
             },
           ),
         ),
