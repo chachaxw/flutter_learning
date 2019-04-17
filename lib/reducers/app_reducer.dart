@@ -7,6 +7,6 @@ AppState appReducer(AppState state, action) {
   return new AppState(
     isLoading: loadingReducer(state.isLoading, action),
     count: counterReducer(state.count, action),
-    newsList: homeReducers(state.newsList, action)
+    newsList: homeReducer(state.newsList, action)
   );
 }

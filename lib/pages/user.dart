@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_image/network.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'camera.dart';
@@ -30,14 +31,16 @@ class  UserProfileState extends State<UserProfilePage> {
   }
 
   Widget _buildStack(BuildContext context, DocumentSnapshot document) {
+    var backgroundImage = Image(
+      fit: BoxFit.cover,
+      image: new NetworkImageWithRetry(document['avatar']),
+    );
+
     return Stack(
       fit: StackFit.expand,
       alignment: Alignment.center,
       children: <Widget>[
-        Image.network(
-          document['avatar'],
-          fit: BoxFit.cover,
-        ),
+        backgroundImage,
         const DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(

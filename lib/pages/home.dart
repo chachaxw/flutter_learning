@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_image/network.dart';
 import 'package:redux/redux.dart';
 import 'page.dart';
 
@@ -47,20 +48,27 @@ class HomePageState extends State<HomePage> {
           var title = item['title'];
           var description = item['description'];
 
+          var avatar = Image(
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+            image: new NetworkImageWithRetry(url),
+          );
+
           return new Card(
             key: id,
             margin: const EdgeInsets.only(bottom: 16.0),
             child: ListTile(
               contentPadding: const EdgeInsets.all(16.0),
-              leading: url != null ? Image.network(
-                url,
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ) : Icon(
-                Icons.landscape,
-                color: Colors.grey,
-                size: 80.0,
+              leading: Container(
+                width: 80.0,
+                alignment: Alignment.center,
+                child: url != null ? avatar : 
+                Icon(
+                  Icons.landscape,
+                  color: Colors.grey,
+                  size: 80.0,
+                ),
               ),
               title: Text(
                 title,

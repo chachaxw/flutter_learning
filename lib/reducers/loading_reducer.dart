@@ -2,11 +2,9 @@ import 'package:flutter_learning/actions/loading_actions.dart';
 
 bool loadingReducer(bool isLoading, action) {
   if (action is LoadingStartAction) {
-    isLoading = true;
-    return isLoading;
+    return true;
   } else if (action is LoadingEndAction) {
-    isLoading = false;
-    return isLoading;
+    return false;
   } else {
     return isLoading;
   }
