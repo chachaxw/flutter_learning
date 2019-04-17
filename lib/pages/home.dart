@@ -28,18 +28,18 @@ class HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  _handleRefresh() {
-    print('Refresh');
+  Future<void> _handleRefresh(context) async {
+    StoreProvider.of<AppState>(context).dispatch(getNewsListAction);
   }
 
   Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
-      onRefresh: _handleRefresh,
+      onRefresh: () => _handleRefresh(context),
       color: Colors.orange,
       child: new ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: newsData != null ? newsData.length : 0,
+        itemCount: newsData.length,
         itemBuilder: (BuildContext context, int index) {
           var item = newsData[index];
           var id = item['id'];
@@ -82,7 +82,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    StoreProvider.of<AppState>(context).dispatch(getNewsListAction);
 
     return new ScrollableTabs(
       key: _homePageKey,
@@ -102,6 +101,9 @@ class HomePageState extends State<HomePage> {
             converter: _ViewModel.fromStore,
             builder: (context, _ViewModel vm) {
               return vm.isLoading ? Loading(tip: 'News Coming...') : _buildDiscover(context, vm.newsList);
+            },
+            onInit: (Store<AppState> store) {
+              StoreProvider.of<AppState>(context).dispatch(getNewsListAction(store));
             },
           ),
         ),

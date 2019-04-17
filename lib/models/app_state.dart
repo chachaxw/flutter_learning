@@ -3,7 +3,7 @@ class AppState {
   final bool isLoading;
   final List<dynamic> newsList;
 
-  AppState({this.count = 0, this.isLoading = false, this.newsList});
+  AppState({this.count = 0, this.isLoading = false, this.newsList = const []});
 
   AppState copyWith({int count, bool isLoading, List<dynamic> newsList}) {
     return new AppState(
@@ -15,6 +15,6 @@ class AppState {
 
   @override
 	String toString() {
-		return 'AppState{isLoading: $isLoading, count: $count, newsList: $newsList}';
+		return 'AppState{isLoading: $isLoading, count: $count, newsList: ${newsList.length}}';
 	}
 }

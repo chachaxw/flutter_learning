@@ -11,15 +11,13 @@ class LoadNewsAction {
 }
 
 Future<void> getNewsListAction(Store<AppState> store) async {
-  store.dispatch(LoadingStartAction);
-
   var response = await ApiService().getNewsData();
   var dataConvertedToJSON = json.decode(response.body);
 
   // Extract the required part and assign it to the global variable named data
   final List<dynamic> newsList = dataConvertedToJSON['articles'];
 
-  // print(response.body);
+  // print(newsList);
   store.dispatch(LoadNewsAction(newsList: newsList ?? []));
-  store.dispatch(LoadingEndAction);
+  store.dispatch(LoadingEndAction());
 }
