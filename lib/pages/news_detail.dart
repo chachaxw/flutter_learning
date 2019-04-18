@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image/network.dart';
+import 'package:flutter_learning/routes.dart';
 
 class NewsDetailPage extends StatefulWidget {
   NewsDetailPage({
-    Key key,
     @required this.url,
     @required this.title,
     @required this.source,
     @required this.content,
     @required this.urlToImage,
     @required this.publishedAt
-  }) : super(key: key);
+  }) : super(key: AppRouteKeys.newsNetailPage);
 
   final String url;
   final String title;
@@ -66,7 +66,7 @@ class NewsDetailState extends State<NewsDetailPage> {
             gradient: LinearGradient(
               begin: Alignment(0.0, 0.8),
               end: Alignment(0.0, -1.0),
-              colors: <Color>[Color(0x60000000), Color(0x00000000)],
+              colors: <Color>[Color(0x80000000), Color(0x00000000)],
             ),
           ),
         ),
@@ -77,7 +77,9 @@ class NewsDetailState extends State<NewsDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Theme(
+      key: _newsDetailKey,
       data: ThemeData(
+        appBarTheme: AppBarTheme(color: Colors.indigo),
         backgroundColor: Colors.white,
       ),
       child: Container(
@@ -94,20 +96,34 @@ class NewsDetailState extends State<NewsDetailPage> {
                   icon: const Icon(Icons.favorite),
                   tooltip: 'Love',
                   onPressed: () {
-                    _newsDetailKey.currentState.showSnackBar(const SnackBar(
-                      content: Text("Love this"),
-                    ));
+                   print("Love this");
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.bookmark),
+                  tooltip: 'Bookmark',
+                  onPressed: () {
+                   print("Bookmark");
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.share),
+                  tooltip: 'Share',
+                  onPressed: () {
+                   print("Share");
                   },
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.all(16.0),
+                centerTitle: false,
+                titlePadding: EdgeInsets.only(left: 40.0, bottom: 16.0),
                 title: Text(
                   'From: $source',
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
                 background: _buildStack(context, urlToImage),

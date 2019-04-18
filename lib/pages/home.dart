@@ -10,9 +10,10 @@ import 'package:flutter_learning/actions/loading_actions.dart';
 import 'package:flutter_learning/actions/home_actions.dart';
 import 'package:flutter_learning/models/app_state.dart';
 import 'package:flutter_learning/widgets/loading.dart';
+import 'package:flutter_learning/routes.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage({this.title}) : super(key: AppRouteKeys.homePage);
 
   final String title;
 
