@@ -41,13 +41,15 @@ class HomePageState extends State<HomePage> {
     String title,
     String content,
     String urlToImage,
-    String publishedAt
+    String publishedAt,
+    String source,
   ) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => NewsDetailPage(
         url: url,
         title: title,
+        source: source,
         content: content,
         urlToImage: urlToImage,
         publishedAt: publishedAt,
@@ -68,6 +70,7 @@ class HomePageState extends State<HomePage> {
           var url = item['url'];
           var title = item['title'];
           var content = item['content'];
+          var source = item['source']['name'];
           var urlToImage = item['urlToImage'];
           var description = item['description'];
           var publishedAt = item['publishedAt'];
@@ -80,7 +83,7 @@ class HomePageState extends State<HomePage> {
           );
 
           return GestureDetector(
-            onTap: () => _viewDetails(context, url, title, content, urlToImage, publishedAt),
+            onTap: () => _viewDetails(context, url, title, content, urlToImage, publishedAt, source),
             child: new Card(
               margin: const EdgeInsets.only(bottom: 16.0),
               child: ListTile(

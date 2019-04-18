@@ -6,6 +6,7 @@ class NewsDetailPage extends StatefulWidget {
     Key key,
     @required this.url,
     @required this.title,
+    @required this.source,
     @required this.content,
     @required this.urlToImage,
     @required this.publishedAt
@@ -13,19 +14,35 @@ class NewsDetailPage extends StatefulWidget {
 
   final String url;
   final String title;
+  final String source;
   final String content;
   final String urlToImage;
   final String publishedAt;
 
   @override
-  State<StatefulWidget> createState() => NewsDetailState();
+  State<StatefulWidget> createState() => NewsDetailState(
+    url: url,
+    title: title,
+    source: source,
+    content: content,
+    urlToImage: urlToImage,
+    publishedAt: publishedAt
+  );
 }
 
 class NewsDetailState extends State<NewsDetailPage> {
-  NewsDetailState({ this.url, this.title, this.content, this.urlToImage , this.publishedAt});
+  NewsDetailState({
+    this.url,
+    this.title,
+    this.source,
+    this.content,
+    this.urlToImage,
+    this.publishedAt
+  });
 
   final String url;
   final String title;
+  final String source;
   final String content;
   final String urlToImage;
   final String publishedAt;
@@ -47,8 +64,8 @@ class NewsDetailState extends State<NewsDetailPage> {
         const DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment(0.0, -1.0),
-              end: Alignment(0.0, -0.4),
+              begin: Alignment(0.0, 0.8),
+              end: Alignment(0.0, -1.0),
               colors: <Color>[Color(0x60000000), Color(0x00000000)],
             ),
           ),
@@ -72,17 +89,20 @@ class NewsDetailState extends State<NewsDetailPage> {
               tooltip: 'Love',
               onPressed: () {
                 _newsDetailKey.currentState.showSnackBar(const SnackBar(
-                  content: Text("Editing isn't supported in this screen."),
+                  content: Text("Love this"),
                 ));
               },
             ),
           ],
           flexibleSpace: FlexibleSpaceBar(
-            centerTitle: false,
+            titlePadding: EdgeInsets.all(16.0),
             title: Text(
-              title ?? '',
-              maxLines: 3,
-              style: Theme.of(context).textTheme.display3,
+              'From: $source',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
             ),
             background: _buildStack(context, urlToImage),
           ),
@@ -91,8 +111,19 @@ class NewsDetailState extends State<NewsDetailPage> {
           delegate: SliverChildListDelegate(
             <Widget>[
               Container(
+                color: Colors.white,
+                padding: EdgeInsets.all(16.0),
                 child: Text(
-                  content ?? '',
+                  title,
+                  style: Theme.of(context).textTheme.headline,
+                ),
+              ),
+              Container(
+                color: Colors.white,
+                height: 400,
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  content,
                   style: Theme.of(context).textTheme.body1,
                 ),
               ),
