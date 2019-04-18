@@ -76,61 +76,68 @@ class NewsDetailState extends State<NewsDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          expandedHeight: _appBarHeight,
-          pinned: true,
-          floating: false,
-          snap: false,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.favorite),
-              tooltip: 'Love',
-              onPressed: () {
-                _newsDetailKey.currentState.showSnackBar(const SnackBar(
-                  content: Text("Love this"),
-                ));
-              },
+    return Theme(
+      data: ThemeData(
+        backgroundColor: Colors.white,
+      ),
+      child: Container(
+        color: Colors.white,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: _appBarHeight,
+              pinned: true,
+              floating: false,
+              snap: false,
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.favorite),
+                  tooltip: 'Love',
+                  onPressed: () {
+                    _newsDetailKey.currentState.showSnackBar(const SnackBar(
+                      content: Text("Love this"),
+                    ));
+                  },
+                ),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.all(16.0),
+                title: Text(
+                  'From: $source',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+                background: _buildStack(context, urlToImage),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                <Widget>[
+                  Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      title ?? '',
+                      style: Theme.of(context).textTheme.headline,
+                    ),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      content ?? '',
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                  ),
+                ],
+              )
             ),
           ],
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.all(16.0),
-            title: Text(
-              'From: $source',
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            background: _buildStack(context, urlToImage),
-          ),
         ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            <Widget>[
-              Container(
-                color: Colors.white,
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  title,
-                  style: Theme.of(context).textTheme.headline,
-                ),
-              ),
-              Container(
-                color: Colors.white,
-                height: 400,
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  content,
-                  style: Theme.of(context).textTheme.body1,
-                ),
-              ),
-            ],
-          )
-        ),
-      ],
+      )
     );
   }
 }

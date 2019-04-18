@@ -14,21 +14,17 @@ class _CameraExampleState extends State<CameraExample> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _cameraPreviewWidget(),
+      child: _cameraPreviewWidget(context),
     );
   }
 
   /// Display the preview from the camera
-  Widget _cameraPreviewWidget() {
+  Widget _cameraPreviewWidget(BuildContext context) {
     if (camera == null || !camera.value.isInitialized) {
-      return const Center(
+      return Center(
         child: Text(
           'Open Camera',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24.0,
-            fontWeight: FontWeight.w900,
-          ),
+          style: Theme.of(context).textTheme.display1,
         ),
       );
     } else {

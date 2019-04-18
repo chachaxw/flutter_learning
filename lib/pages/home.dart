@@ -63,7 +63,6 @@ class HomePageState extends State<HomePage> {
       onRefresh: () => _handleRefresh(context),
       color: Colors.orange,
       child: new ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: newsData.length,
         itemBuilder: (BuildContext context, int index) {
           var item = newsData[index];
@@ -75,11 +74,15 @@ class HomePageState extends State<HomePage> {
           var description = item['description'];
           var publishedAt = item['publishedAt'];
 
-          var avatar = Image(
+          var thumb = urlToImage != null ? Image(
             width: 80,
             height: 80,
             fit: BoxFit.cover,
             image: new NetworkImageWithRetry(urlToImage),
+          ) : Icon(
+            Icons.landscape,
+            color: Colors.grey,
+            size: 80.0,
           );
 
           return GestureDetector(
@@ -90,24 +93,20 @@ class HomePageState extends State<HomePage> {
                 contentPadding: const EdgeInsets.all(16.0),
                 leading: Container(
                   width: 80.0,
+                  height: 80,
                   alignment: Alignment.topCenter,
-                  child: urlToImage != null ? avatar : 
-                  Icon(
-                    Icons.landscape,
-                    color: Colors.grey,
-                    size: 80.0,
-                  ),
+                  child: thumb,
                 ),
                 title: Container(
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    title,
+                    title ?? '',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 subtitle: Text(
-                  description,
+                  description ?? '',
                   maxLines: 3,
                   textAlign: TextAlign.justify,
                   overflow: TextOverflow.ellipsis,
