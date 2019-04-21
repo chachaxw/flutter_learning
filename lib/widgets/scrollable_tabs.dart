@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../pages/page.dart';
+
+import 'package:flutter_learning/widgets/search.dart';
+import 'package:flutter_learning/pages/page.dart';
 
 enum TabsStyle {
   iconsAndText,
@@ -59,8 +61,10 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
   final bool isScrollable;
   final FloatingActionButton floatingActionButton;
   final BottomNavigationBar bottomNavigationBar;
+  final SearchBarDelegate _delegate = SearchBarDelegate();
 
   bool _customIndicator = false;
+  int _lastIntegerSelected;
 
   @override
   void initState() {
@@ -156,7 +160,17 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
           IconButton(
             icon: Icon(Icons.search, color: Colors.white),
             tooltip: 'Search',
-            onPressed: null,
+            onPressed: () async {
+              final int selected = await showSearch<int>(
+                context: context,
+                delegate: _delegate,
+              );
+              if (selected != null && selected != _lastIntegerSelected) {
+                setState(() {
+                  _lastIntegerSelected = selected;
+                });
+              }
+            },
           ),
         ],
       ),
