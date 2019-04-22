@@ -69,9 +69,11 @@ class Http {
   factory Http() =>_getInstance();
   static Http get instance => _getInstance();
   static Http _instance;
+  static String baseUrl;
 
   Http._internal() {
     // 初始化
+    baseUrl = NetworkConfig.instance.getBaseUrl();
   }
 
   static Http _getInstance() {
@@ -82,25 +84,26 @@ class Http {
   }
 
   Future<http.Response> post(url, { body }) async {
-    String _url = '${NetworkConfig.instance.getBaseUrl()}$url';
+    String _url = '$baseUrl$url';
     Map<String,String> header = NetworkConfig.instance.getHttpHeader();
-    http.Response response = await http.post(_url,
-        headers: header,
-        body: body);
+    http.Response response = await http.post(_url, headers: header, body: body);
+  
     return response;
   }
 
   Future<http.Response> patch(url, {body}) async {
-    String _url = '${NetworkConfig.instance.getBaseUrl()}${url}';
+    String _url = '$baseUrl$url';
     Map<String,String> header = NetworkConfig.instance.getHttpHeader();
     http.Response response = await http.patch(_url, headers: header, body: body);
+  
     return response;
   }
 
   Future<http.Response> get(url) async {
-    String _url = '${NetworkConfig.instance.getBaseUrl()}${url}';
+    String _url = '$baseUrl$url';
     Map<String,String> header = NetworkConfig.instance.getHttpHeader();
     http.Response response = await http.get(_url, headers: header);
+
     return response;
   }
 
@@ -109,10 +112,11 @@ class Http {
     for (var entry in parms.entries) {
       parmStr = parmStr + '${entry.key}=${entry.value}&';
     }
-    String _url = '${NetworkConfig.instance.getBaseUrl()}${url}?${parmStr}';
+
+    String _url = '${NetworkConfig.instance.getBaseUrl()}$url?$parmStr';
     Map<String,String> header = NetworkConfig.instance.getHttpHeader();
-    http.Response response = await http.get(_url,
-        headers: header);
+    http.Response response = await http.get(_url, headers: header);
+
     return response;
   }
 }
