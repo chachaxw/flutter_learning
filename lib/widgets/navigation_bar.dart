@@ -87,7 +87,7 @@ class NavigationBarState extends State<NavigationBar> with TickerProviderStateMi
       NavigationIconView(
         icon: const Icon(Icons.home),
         color: Colors.indigo,
-        title: 'Home',
+        title: 'News',
         vsync: this,
       ),
       NavigationIconView(
