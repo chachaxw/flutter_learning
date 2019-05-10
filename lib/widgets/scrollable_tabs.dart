@@ -182,7 +182,8 @@ class ScrollableTabsState extends State<ScrollableTabs> with SingleTickerProvide
             bottom: false,
             child: Container(
               key: ObjectKey(page.icon),
-              padding: const EdgeInsets.only(top: 12.0, left: 12.0, right: 12.0),
+              margin: EdgeInsets.only(top: 16.0),
+              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
               child: page.body,
             ),
           );

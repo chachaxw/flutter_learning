@@ -58,15 +58,22 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildDiscover(BuildContext context, List<dynamic> newsData) {
+  Widget _buildDiscover(BuildContext context, _ViewModel vm) {
+    var newsList = vm.newsList;
+    var isLoading= vm.isLoading;
+
+    if (isLoading) {
+      return Loading(tip: 'News Coming...');
+    }
+
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: () => _handleRefresh(context),
       color: Colors.orange,
       child: new ListView.builder(
-        itemCount: newsData.length,
+        itemCount: newsList.length,
         itemBuilder: (BuildContext context, int index) {
-          var item = newsData[index];
+          var item = newsList[index];
           var url = item['url'];
           var title = item['title'];
           var content = item['content'];
@@ -140,7 +147,7 @@ class HomePageState extends State<HomePage> {
           body: StoreConnector<AppState, _ViewModel>(
             converter: _ViewModel.fromStore,
             builder: (context, _ViewModel vm) {
-              return vm.isLoading ? Loading(tip: 'News Coming...') : _buildDiscover(context, vm.newsList);
+              return _buildDiscover(context, vm);
             },
             onInit: (Store<AppState> store) {
               StoreProvider.of<AppState>(context).dispatch(LoadingStartAction());
