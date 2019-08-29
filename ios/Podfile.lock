@@ -266,7 +266,7 @@ SPEC CHECKSUMS:
   gRPC-ProtoRPC: cc498c1885e75a1fb6b892881b440707f131fb5e
   gRPC-RxLibrary: 562e2a6d12137d15dfb93bbf652bd3f638e3eb8a
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
-  image_picker: a211f28b95a560433c00f5cd3773f4710a20404d
+  image_picker: 16e5fec1fbc87fd3b297c53e4048521eaf17cd06
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259

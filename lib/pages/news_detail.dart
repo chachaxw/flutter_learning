@@ -51,6 +51,7 @@ class NewsDetailState extends State<NewsDetailPage> {
   static final GlobalKey<ScaffoldState> _newsDetailKey = GlobalKey<ScaffoldState>();
 
   Widget _buildStack(BuildContext context, String urlToImage) {
+    print(urlToImage);
     var backgroundImage = Image(
       fit: BoxFit.cover,
       image: new NetworkImageWithRetry(urlToImage),
@@ -145,7 +146,7 @@ class NewsDetailState extends State<NewsDetailPage> {
                     padding: EdgeInsets.all(16.0),
                     child: Text(
                       content ?? '',
-                      style: Theme.of(context).textTheme.body1,
+                      style: Theme.of(context).textTheme.display1
                     ),
                   ),
                 ],
